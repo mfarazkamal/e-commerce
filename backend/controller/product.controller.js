@@ -1,43 +1,17 @@
 import Product from "../models/product.model.js"
 
-
-export const productList = async (req, res) => {
-    try { 
-        const products = await Product.find()
-        res.status(200).json(products)
-
-    } catch (error) {
-        console.log(`Error getting products: ${error.message}`);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-}
-
-export const singleProduct = async (req, res) => {
-    try {
-        const {productSKU} = req.params;
-
-        if(!productSKU){
-            return res.status(400).json({ error: "Please provide productSKU" })
-        }
-
-        const product = await Product.findOne({ productSKU })
-        res.status(200).json(product)
-        
-    } catch (error) {
-        console.log(`Error getting single product: ${error.message}`);
-        res.status(500).json({ error: 'Internal server error' });        
-    }
-}
-
 export const addProduct = async (req, res) => {
     const { name, description, price, stock, productSKU } = req.body
+    const productExist = await Product.findOne({ productSKU })
 
-    if(productSKU){
-        const productExist = await Product.findOne({ productSKU })
-        if(productExist){
-            return res.status(400).json({ error: "Product SKU already exist" })
-        }
+    if (productExist) {
+        return res.status(400).json({ error: "Product already exist" })
     }
+
+
+    // if(!productImage){
+    //     return res.status(400).json({ error: "Please provide product image" })
+    // }
 
     if (!name || !description || !price || !stock || !productSKU) {
         return res.status(400).json({ error: "Please provide all the fields" })
@@ -50,10 +24,26 @@ export const addProduct = async (req, res) => {
     if (price <= 0) {
         return res.status(400).json({ error: "Price must be greater than 0" })
     }
-    await Product.create({ name, description, price, stock, productSKU })
+
+    // if(productImage){
+    //     try{
+    //         const uploadImage  = await cloudinary.uploader.upload(productImage, {
+    //             folder: "products",
+    //             resource_type: "image",
+                
+    //         })
+    //         productImage = uploadImage.secure_url;
+    //     }catch(uploadError){
+    //         console.error("Cloudinary Upload Error: ", uploadError);
+    //         return res.status(500).json({message: "Error uploading image"});
+    //     }
+    // }
+
+    await Product.create({ name, description, price, stock, productSKU, productImage })
 
     res.status(200).json(
         {
+            // id: productExist._id,
             name,
             description,
             price,
@@ -61,6 +51,34 @@ export const addProduct = async (req, res) => {
             productSKU
         }
     )
+}
+
+export const productList = async (req, res) => {
+    try {
+        const products = await Product.find()
+        res.status(200).json(products)
+
+    } catch (error) {
+        console.log(`Error getting products: ${error.message}`);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+export const singleProduct = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        if (!id) {
+            return res.status(400).json({ error: "Please provide id" })
+        }
+
+        const product = await Product.findOne({id})
+        res.status(200).json(product)
+
+    } catch (error) {
+        console.log(`Error getting single product: ${error.message}`);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 }
 
 export const updateProduct = async (req, res) => {

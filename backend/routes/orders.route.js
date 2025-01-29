@@ -4,9 +4,9 @@ import { cancelOrder, orderHistory, placeOrder, singleOrder } from "../controlle
 const router = express.Router();
 
 
-router.post("/orders", placeOrder);
+router.post("/", placeOrder);
 router.get("/", orderHistory);
 router.get("/:id", singleOrder);
-router.delete("/order/:id", cancelOrder);
+router.delete("/:id", cancelOrder);
 
 export default router

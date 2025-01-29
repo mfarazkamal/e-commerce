@@ -4,16 +4,15 @@ export const contants = {
     tokenExpiryTime: 24 * 60 * 60 * 1000,
     nonAuthPaths: [
         '/api/products/',
-        '/api/products/:productSKU',
-        '/api/user/'
+        '/api/products/:id',
+        '/api/user/',
+        '/api/user/login'
     ],
     userPaths: [
-        '/api/users/login',
-        '/api/users/:id',
-        '/api/order/',
-        '/api/order/orders',
-        '/api/order/:id',
-        '/api/order/order/:id'
+        '/api/user/:id',
+        '/api/orders/',
+        '/api/orders/:id',
+        '/api/orders/:id'
     ]
 }
 

@@ -23,6 +23,10 @@ const productSchema = mongoose.Schema({
         type: String,
         required: true,
         unique: true
+    },
+    productImageUrl:{
+        type: String,
+        required: true
     }
 }, {
     timestamps: true
