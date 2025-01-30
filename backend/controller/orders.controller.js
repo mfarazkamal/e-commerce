@@ -129,12 +129,43 @@ export const singleOrder = (req, res) => {
     }
 }
 
-export const cancelOrder = (req, res) => {
-    /*
-    order id from front end
-    extract order from order id to check if not cancelled or delivered ? :
-    extract order items from order id
-    update order items stock/inventory
-    update order status to cancelled
-    */
+export const cancelOrder = async (req, res) => {
+
+    try {
+        const { id } = req.params
+
+        const order = await Order.findById(id)
+
+        if(!order){
+            return res.status(400).json({ error: "Order not found" });
+        }
+
+        if(order.status == "cancelled"){
+            return res.status(400).json({ error: "Order already cancelled" });
+        }
+
+        if(order.status == "delivered"){
+            return res.status(400).json({ error: "Order already delivered" });
+        }
+
+        const orderItems = await OrderItem.find({ order_id: id })
+
+        if(!orderItems || orderItems.length === 0){
+            return res.status(400).json({ error: "Order items not found" });
+        }
+
+        for (let i = 0; i < orderItems.length; i++) {
+            const item = orderItems[i];
+            await Product.updateOne({ _id: item.product_id }, { $inc: { stock: item.quantity } })
+        }
+
+        await Order.updateOne({ _id: id }, { status: "cancelled" })
+
+        return res.status(200).json({ message: "Order cancelled" });
+        
+    } catch (error) {
+        console.log(`Error cancelling order: ${error.message}`);
+        res.status(500).json({ error: 'Internal server error' });
+        
+    }
 }
