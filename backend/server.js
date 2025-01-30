@@ -7,6 +7,7 @@ import dotenv from 'dotenv'
 import cookieParser from "cookie-parser";
 import { authMiddleware } from "./middleware/protectRoute.js";
 import { v2 as cloudinary } from 'cloudinary';
+import cors from 'cors'
 
 const app = express();
 const PORT = process.env.PORT || 3000
@@ -22,6 +23,8 @@ cloudinary.config({
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET
 })
+
+app.use(cors(['http://localhost:5173/']))
 
 app.use(authMiddleware)
 
