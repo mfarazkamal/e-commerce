@@ -55,7 +55,7 @@ export const placeOrder = async (req, res) => {
         const order = await Order.create({
             user_id,
             total_amount,
-            status: "pending"
+            status: "completed"
         })
 
         for (let i = 0; i < items.length; i++) {
@@ -120,12 +120,25 @@ export const orderHistory = async (req, res) => {
     }
 }
 
-export const singleOrder = (req, res) => {
+export const singleOrder = async (req, res) => {
     try {
+        const { id } = req.params;
 
+        if (!id) {
+            return res.status(400).json({ error: "Please provide correct id" })
+        }
 
+        const order = await Order.findById(id)
+
+        if (!order) {
+            return res.status(400).json({ error: "Order not found" });
+        }
+
+        res.status(200).json(order)
+        
     } catch (error) {
-
+        console.log(`Error getting order history: ${error.message}`);
+        res.status(500).json({ error: 'Internal server error' });
     }
 }
 

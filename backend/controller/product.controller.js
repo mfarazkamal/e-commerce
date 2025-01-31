@@ -30,7 +30,7 @@ export const addProduct = async (req, res) => {
     //         const uploadImage  = await cloudinary.uploader.upload(productImage, {
     //             folder: "products",
     //             resource_type: "image",
-                
+
     //         })
     //         productImage = uploadImage.secure_url;
     //     }catch(uploadError){
@@ -39,7 +39,7 @@ export const addProduct = async (req, res) => {
     //     }
     // }
 
-    await Product.create({ name, description, price, stock, productSKU, productImage })
+    await Product.create({ name, description, price, stock, productSKU })
 
     res.status(200).json(
         {
@@ -68,11 +68,13 @@ export const singleProduct = async (req, res) => {
     try {
         const { id } = req.params;
 
+
         if (!id) {
-            return res.status(400).json({ error: "Please provide id" })
+            return res.status(400).json({ error: "Please provide correct id" })
         }
 
-        const product = await Product.findOne({id})
+        const product = await Product.findOne({ _id: id })
+
         res.status(200).json(product)
 
     } catch (error) {
@@ -82,31 +84,48 @@ export const singleProduct = async (req, res) => {
 }
 
 export const updateProduct = async (req, res) => {
-    const { id } = req.params
+    try {
+        const { id } = req.params
 
-    if (!id) {
-        return res.status(400).json({ error: "Product not found. Provide valid id." })
-    }
-
-    const { name, description, price, stock } = req.body;
-
-    if (description.length < 10 || description.length > 500) {
-        return res.status(400).json({ error: "Description must be between 10 and 500 characters" })
-    }
-
-    if (price <= 0) {
-        return res.status(400).json({ error: "Price must be greater than 0" })
-    }
-    await Product.findByIdAndUpdate(id, { name, description, price, stock })
-
-    res.status(200).json(
-        {
-            name,
-            description,
-            price,
-            stock,
+        if (!id) {
+            return res.status(400).json({ error: "Product not found. Provide valid id." })
         }
-    )
+
+        if(Product.productSKU != req.body.productSKU){
+            return res.status(400).json({ error: "Product SKU cannot be updated" })
+        }
+
+        const { name, description, price, stock } = req.body;
+        console.log(name, description, price, stock)
+
+       if(description.length < 10 || description.length > 500){
+            return res.status(400).json({ error: "Description must be between 10 and 500 characters" })
+        }
+
+        if (price <= 0) {
+            return res.status(400).json({ error: "Price must be greater than 0" })
+        }
+
+        await Product.findByIdAndUpdate(id,
+            {
+                name: name || Product.name,
+                description: description || Product.description,
+                price: price || Product.price,
+                stock: stock || Product.stock,
+            })
+
+        res.status(200).json(
+            {
+                name,
+                description,
+                price,
+                stock
+            }
+        )
+    } catch (error) {
+        console.log(`Error updating product: ${error.message}`);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 }
 
 export const deleteProduct = async (req, res) => {

@@ -6,7 +6,8 @@ export const contants = {
         '/api/products/',
         '/api/products/:id',
         '/api/user/',
-        '/api/user/login'
+        '/api/user/login',
+        '/api/user/admin'
     ],
     userPaths: [
         '/api/user/:id',

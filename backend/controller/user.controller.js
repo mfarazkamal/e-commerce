@@ -6,7 +6,6 @@ import bcrypt from 'bcrypt';
 export const userProfile = async (req, res) => {
     const { id } = req.params;
 
-
     try {
         const user = await User.findById(id).select('-password');
         if (!user) {
@@ -21,8 +20,6 @@ export const userProfile = async (req, res) => {
     }
 }
 
-
-
 export const updateUser = async (req, res) => {
     const { id } = req.params;
 
@@ -32,7 +29,7 @@ export const updateUser = async (req, res) => {
             return res.status(404).json({ error: "User not found" });
         }
 
-        const { username, address, password } = req.body;
+        const { username, address } = req.body;
 
         if(!username || !address) { 
             return res.status(400).json({ error: "Please provide all the details" });

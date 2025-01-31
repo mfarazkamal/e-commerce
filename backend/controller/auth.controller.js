@@ -6,7 +6,6 @@ import bcrypt from 'bcrypt';
 export const userRegisterAuth = async (req, res) => {
     try {
         const { username, address, email, password } = req.body;
-
         if (!username || !address || !email || !password) {
             return res.status(400).json({
                 success: false,
@@ -43,7 +42,6 @@ export const userRegisterAuth = async (req, res) => {
             })
         }
         
-        
             const token = generateToken(newUser._id, res)
             if(!token){
                 return res.status(500).json({
@@ -58,6 +56,79 @@ export const userRegisterAuth = async (req, res) => {
                 username: newUser.username,
                 email: newUser.email,
                 address: newUser.address
+            })
+       
+
+    } catch (error) {
+        console.log(`Error registering user: ${error.message}`);
+        res.status(500).json({ error: error.message });
+    }
+}
+
+export const adminRegisterAuth = async (req,res) => {
+    try {
+        const { username, address, email, password, user_type } = req.body;
+
+        if (!username || !address || !email || !password || !user_type) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid Data"
+            })
+        }
+
+        if (!contants.emailRegex.test(email)) {
+            return res.status(400).json({ message: "Please provide a valid email address" })
+        }
+
+        if(user_type !== 'admin') {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid User Type"
+            })
+        }
+
+        const emailExist = await User.findOne({ email });
+        if (emailExist) {
+            return res.status(400).json({
+                success: false,
+                message: "Admin already exist"
+            })
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        const hashPass = await bcrypt.hash(password, salt);
+
+        const newAdmin = new User({
+            username,
+            email,
+            password: hashPass,
+            address,
+            user_type
+        })
+
+        if(!newAdmin) {
+            return res.status(500).json({
+                success: false,
+                message: "Internal Server Error"
+            })
+        }
+        
+        
+            const token = generateToken(newAdmin._id, res)
+            if(!token){
+                return res.status(500).json({
+                    success: false,
+                    message: "Something went wrong"
+                })
+            }
+            await newAdmin.save();
+
+            res.status(201).json({
+                id: newAdmin._id,
+                username: newAdmin.username,
+                email: newAdmin.email,
+                address: newAdmin.address,
+                user_type: newAdmin.user_type
             })
        
 
