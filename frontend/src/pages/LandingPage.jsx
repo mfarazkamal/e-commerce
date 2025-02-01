@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import ProductCard from '../components/LandingPage/ProductCard'
+import { Box } from '@mui/material'
 
 const LandingPage = () => {
 
@@ -16,16 +17,24 @@ const LandingPage = () => {
         }
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         fetchProducts()
     }, [])
-  return (
-    <div>
-        {products && products.map((product) => {
-            return <ProductCard key={product._id} {...product} />
-        })}
-    </div>
-  )
+    return (
+        <Box
+            sx={{
+                height: '100%',
+                display: 'flex',
+                gap: '2rem',
+                flexWrap: 'wrap',
+                margin: '2rem',
+            }}
+        >
+            {products && products.map((product) => {
+                return <ProductCard key={product._id} {...product} />
+            })}
+        </Box>
+    )
 }
 
 export default LandingPage
