@@ -1,17 +1,17 @@
 import Product from "../models/product.model.js"
+import { v2 as cloudinary } from 'cloudinary';
 
 export const addProduct = async (req, res) => {
-    const { name, description, price, stock, productSKU } = req.body
+    const { name, description, price, stock, productSKU, productImage } = req.body
     const productExist = await Product.findOne({ productSKU })
 
     if (productExist) {
         return res.status(400).json({ error: "Product already exist" })
     }
 
-
-    // if(!productImage){
-    //     return res.status(400).json({ error: "Please provide product image" })
-    // }
+    if(!productImage){
+        return res.status(400).json({ error: "Please provide product image" })
+    }
 
     if (!name || !description || !price || !stock || !productSKU) {
         return res.status(400).json({ error: "Please provide all the fields" })
@@ -25,30 +25,37 @@ export const addProduct = async (req, res) => {
         return res.status(400).json({ error: "Price must be greater than 0" })
     }
 
-    // if(productImage){
-    //     try{
-    //         const uploadImage  = await cloudinary.uploader.upload(productImage, {
-    //             folder: "products",
-    //             resource_type: "image",
+    let productImageUrl;
 
-    //         })
-    //         productImage = uploadImage.secure_url;
-    //     }catch(uploadError){
-    //         console.error("Cloudinary Upload Error: ", uploadError);
-    //         return res.status(500).json({message: "Error uploading image"});
-    //     }
-    // }
+    if(productImage){
+        try{
+            const uploadImage  = await cloudinary.uploader.upload(productImage, {
+                folder: "products",
+                resource_type: "image",
 
-    await Product.create({ name, description, price, stock, productSKU })
+            })
+            console.log('Image Upload', uploadImage);
+            
+            productImageUrl = uploadImage.secure_url;
+            console.log('Image URL', productImageUrl);
+            
+        }catch(uploadError){
+            console.error("Cloudinary Upload Error: ", uploadError);
+            return res.status(500).json({message: "Error uploading image"});
+        }
+    }
+    console.log('Image URL', productImageUrl);
+
+    await Product.create({ name, description, price, stock, productSKU, productImageUrl })
 
     res.status(200).json(
         {
-            // id: productExist._id,
             name,
             description,
             price,
             stock,
-            productSKU
+            productSKU,
+            productImageUrl
         }
     )
 }

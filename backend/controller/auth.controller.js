@@ -6,6 +6,8 @@ import bcrypt from 'bcrypt';
 export const userRegisterAuth = async (req, res) => {
     try {
         const { username, address, email, password } = req.body;
+        console.log(req.body);
+        
         if (!username || !address || !email || !password) {
             return res.status(400).json({
                 success: false,

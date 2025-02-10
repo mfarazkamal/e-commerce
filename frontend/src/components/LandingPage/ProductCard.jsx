@@ -7,18 +7,18 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
 export default function ProductCard(props) {
-    const {imageURL, title, description, price} = props;
+    const {name, description, price, productImageUrl} = props;
   return (
     <Card sx={{ maxWidth: 345 }}>
       <CardMedia
         sx={{ height: 140 }}
-        image={imageURL}
+        image={productImageUrl}
       />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
-          {title}
+          {name}
         </Typography>
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+        <Typography variant="body2" sx={{ color: 'text.secondary', textOverflow:'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
           {description}
         </Typography>
       </CardContent>

@@ -33,6 +33,8 @@ import jwt from "jsonwebtoken";
 
 export const authMiddleware = async (req, res, next) => {
     const token = req.cookies.jwt;
+    console.log('response', res.cookies);
+    console.log('token', token);
     const currentPath = req.path;
     console.log('Path', req.path);
 
@@ -48,11 +50,13 @@ export const authMiddleware = async (req, res, next) => {
         }
     } else {
         const userId = jwt.verify(token, process.env.JWT_SECRET).userId;
-
+        console.log('userId', userId);
+        
         if (userId) {
 
             const user = await User.findById(userId).select('-password');
-
+            console.log('user', user);
+            
             if (!user) {
                 return res.status(401).json({ error: "Unauthorized User" });
             }
