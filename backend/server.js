@@ -13,6 +13,9 @@ import path from 'path'
 const app = express();
 const PORT = process.env.PORT || 3000
 dotenv.config()
+
+const __dirname = path.resolve();
+
 app.use(cookieParser())
 app.use(express.json({limit: '5mb'}))
 app.use(express.json())
