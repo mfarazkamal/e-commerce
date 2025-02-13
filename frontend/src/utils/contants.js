@@ -1,7 +1,7 @@
 export const userRoutes = [
     '/profile',
     '/cart',
-    '/products',
+    '/product',
 ]
 
 export const adminRoutes = [

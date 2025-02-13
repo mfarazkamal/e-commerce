@@ -48,11 +48,11 @@ const SignInPage = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:3000/api/user/login", formData);
+      const response = await axios.post("http://localhost:3000/api/user/login", formData, { withCredentials: true });
 
       console.log("Login successful:", response.data);
       setUser(response.data);
-      localStorage.setItem("token", response.data.token); // Save token for authentication
+
       navigate("/profile"); // Redirect to dashboard/home page
     } catch (error) {
       console.error("Login error:", error.response?.data || error.message);

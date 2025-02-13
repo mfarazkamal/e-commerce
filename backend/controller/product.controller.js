@@ -34,17 +34,14 @@ export const addProduct = async (req, res) => {
                 resource_type: "image",
 
             })
-            console.log('Image Upload', uploadImage);
             
             productImageUrl = uploadImage.secure_url;
-            console.log('Image URL', productImageUrl);
             
         }catch(uploadError){
             console.error("Cloudinary Upload Error: ", uploadError);
             return res.status(500).json({message: "Error uploading image"});
         }
     }
-    console.log('Image URL', productImageUrl);
 
     await Product.create({ name, description, price, stock, productSKU, productImageUrl })
 
@@ -74,7 +71,6 @@ export const productList = async (req, res) => {
 export const singleProduct = async (req, res) => {
     try {
         const { id } = req.params;
-
 
         if (!id) {
             return res.status(400).json({ error: "Please provide correct id" })

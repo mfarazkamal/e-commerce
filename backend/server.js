@@ -12,11 +12,11 @@ import cors from 'cors'
 const app = express();
 const PORT = process.env.PORT || 3000
 dotenv.config()
-
+app.use(cookieParser())
 app.use(express.json({limit: '5mb'}))
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
-app.use(cookieParser())
+
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -24,9 +24,14 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 })
 
-app.use(cors(['http://localhost:5173/']))
+app.use(cors({
+    origin: "http://localhost:5173", // Frontend URL
+    credentials: true // Allow sending cookies
+}));
+
 
 app.use(authMiddleware)
+
 
 app.use('/api/user', usersRoute)
 app.use('/api/products', productsRoute)

@@ -1,13 +1,18 @@
 import jwt from 'jsonwebtoken';
-import { contants } from './constant.js';
 
-export const generateToken = (email, res) => {
-    const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '1d' });
-    console.log(token);
-    res.cookie('authToken', token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'None',
-    });
-    return token;
-}
+export const generateToken = (userId, res) => {
+    try {
+        const token = jwt.sign({ userId }, process.env.JWT_SECRET);
+
+        res.cookie('authToken', token, {
+            secure: process.env.NODE_ENV === 'production', 
+            sameSite: 'None',
+            maxAge: 24 * 60 * 60 * 1000
+        });
+
+        return token;
+    } catch (error) {
+        console.error("Error generating token:", error);
+        return null;
+    }
+};

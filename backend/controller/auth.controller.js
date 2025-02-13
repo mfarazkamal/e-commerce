@@ -169,12 +169,17 @@ export const userLoginAuth = async (req, res) => {
             })
         }
 
-        const token = generateToken(userExist._id, res)
-        if (!token) {
-            return res.status(400).json({
+        try {
+            const token = generateToken(userExist._id, res);
+            if (!token) {
+                throw new Error("Token generation failed");
+            }
+        } catch (error) {
+            return res.status(500).json({
                 success: false,
-                message: "Something went wrong"
-            })
+                message: "Something went wrong during token generation",
+                error: error.message
+            });
         }
 
         res.status(200).json({
