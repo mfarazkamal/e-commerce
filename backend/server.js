@@ -28,12 +28,6 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 })
 
-app.use(cors({
-    origin: "http://localhost:5173", // Frontend URL
-    credentials: true // Allow sending cookies
-}));
-
-
 app.use(authMiddleware)
 
 
