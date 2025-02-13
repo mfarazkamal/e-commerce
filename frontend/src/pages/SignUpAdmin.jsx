@@ -60,7 +60,7 @@ import {
       setLoading(true);
   
       try {
-        const response = await axios.post("http://localhost:3000/api/user/admin", {
+        const response = await axios.post("/api/user/admin", {
           username: formData.username,
           address: formData.address,
           email: formData.email,

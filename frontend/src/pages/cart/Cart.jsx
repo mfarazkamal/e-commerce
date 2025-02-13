@@ -6,16 +6,15 @@ import Button from '@mui/material/Button';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardActions from '@mui/material/CardActions';
 import { Box } from '@mui/material';
-import { useEffect } from 'react';
 const Cart = () => {
 
     const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
 
-    const fetchProducts = async () => {
-        const response = await fetch('http://localhost:5000/products');
-        const data = await response.json();
-        console.log(data);
-    }
+    // const fetchProducts = async () => {
+    //     const response = await fetch('http://localhost:5000/products');
+    //     const data = await response.json();
+    //     console.log(data);
+    // }
 
 
     return (

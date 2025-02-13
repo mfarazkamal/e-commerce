@@ -48,7 +48,7 @@ const SignInPage = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:3000/api/user/login", formData, { withCredentials: true });
+      const response = await axios.post("/api/user/login", formData, { withCredentials: true });
 
       console.log("Login successful:", response.data);
       setUser(response.data);

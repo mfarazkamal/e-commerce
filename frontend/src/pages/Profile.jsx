@@ -21,18 +21,7 @@ const ProfilePage = () => {
   }, [user])
 
   useEffect(() => {
-    // const fetchUserProfile = async () => {
-    //   try {
-    //     const response = await axios.get(`/api/user/${userId}`);
-    //     setUser(response.data);
-    //     setEditUser({ name: response.data.name, address: response.data.address, password: "" });
-    //   } catch (error) {
-    //     console.log(error);        
-    //     setError("Failed to load user profile");
-    //   } finally {
-    //     setLoading(false);
-    //   }
-    // };
+
 
     const fetchUserOrders = async () => {
       try {

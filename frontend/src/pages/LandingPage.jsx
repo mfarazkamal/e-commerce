@@ -1,20 +1,13 @@
 import { useEffect, useState } from 'react'
 import ProductCard from '../components/LandingPage/ProductCard'
 import { Box } from '@mui/material'
-import axios from 'axios'
 
 const LandingPage = () => {
 
-    async function login() {
-        const res = await axios.get('http://localhost:3000/login')
-        console.log(res)
-    }
-
-    login();
     const [products, setProducts] = useState()
     const fetchProducts = async () => {
         try {
-            const response = await fetch('http://localhost:3000/api/products/')
+            const response = await fetch('/api/products/')
             const data = await response.json()
             console.log(data)
             setProducts(data)

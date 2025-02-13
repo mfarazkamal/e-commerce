@@ -37,6 +37,15 @@ app.use('/api/user', usersRoute)
 app.use('/api/products', productsRoute)
 app.use('/api/orders', ordersRoute)
 
+
+if(process.env.NODE_ENV === 'production'){
+    app.use(express.static(path.join(__dirname, '/frontend/dist')))
+
+    app.get('*', (req, res)=>{
+        res.sendFile(path.resolve(__dirname, 'frontend', 'dist', 'index.html'))
+    })
+}
+
 app.listen(PORT, ()=>{
     console.log(`server is running, port: ${PORT}`)
     connectDB()
