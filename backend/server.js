@@ -8,6 +8,7 @@ import cookieParser from "cookie-parser";
 import { authMiddleware } from "./middleware/protectRoute.js";
 import { v2 as cloudinary } from 'cloudinary';
 import cors from 'cors'
+import path from 'path'
 
 const app = express();
 const PORT = process.env.PORT || 3000
