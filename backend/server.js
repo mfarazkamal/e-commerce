@@ -1,3 +1,4 @@
+import path from 'path'
 import express from "express";
 import usersRoute from "./routes/users.route.js";
 import ordersRoute from "./routes/orders.route.js";
@@ -8,13 +9,13 @@ import cookieParser from "cookie-parser";
 import { authMiddleware } from "./middleware/protectRoute.js";
 import { v2 as cloudinary } from 'cloudinary';
 import cors from 'cors'
-import path from 'path'
+
 
 const app = express();
 const PORT = process.env.PORT || 3000
+const __dirname = path.resolve();
 dotenv.config()
 
-const __dirname = path.resolve();
 
 app.use(cookieParser())
 app.use(express.json({limit: '5mb'}))
@@ -28,7 +29,7 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 })
 
-app.use(authMiddleware)
+// app.use(authMiddleware)
 
 
 app.use('/api/user', usersRoute)
